@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Bongo Video Player</string>
+    <string name="btn_next_video">Next</string>
+    <string name="error_message_network_connection">Please check your network connection and try again!</string>
+    <string name="error_message_network_needed">Oops, you need a network connection to do that!</string>
+    <string name="error_message_network_needed_app">Oops, you need a network connection to use Video Player App!</string>
+    <string name="action_rewind">Rewind</string>
+    <string name="action_fast_forward">Fast Forward</string>
+    <string name="initial_progress_time">00:00</string>
+    <string name="initial_remaining_time">99:99</string>
+</resources>
