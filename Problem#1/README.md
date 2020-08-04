@@ -6,7 +6,7 @@ Unit Test code here: https://github.com/sam43/Bongo_Android_Interview_Test/blob/
 
 ## Problem explanation:
 
-Write a function to check whether two given strings are anagram of each other or not. An anagram of a string is another string that contains same characters, only the order of characters can be different. For example, ‘bleat’ and ‘table’ are anagrams of each other but ‘eat’ and ‘tar’ are not.
+An anagram of a string is another string that contains same characters, only the order of characters can be different. For example, ‘bleat’ and ‘table’ are anagrams of each other but ‘eat’ and ‘tar’ are not. We need to write a function to check whether two given strings are anagram of each other or not. 
 
 ### Anagram.kt
 
