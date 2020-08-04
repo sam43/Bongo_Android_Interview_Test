@@ -60,12 +60,80 @@ To create a car and a plane class, we will simply keep Vehicle interface as the 
 Both Car and Plane classes implemented the Vehicle interface to override the base variables *set_num_of_wheels()*, *set_num_of_passengers()* and *has_gas()* to set their own attributes and properties there. Now we can simply build the car and plane class from our main/driver class like below:
 
       fun main() {
-            // Ans of Question (a)
-            val car = Car(num_of_wheels = 4, num_of_passengers = 4, has_gas = true)
-            car.drive()
-            val plane = Plane(num_of_wheels = 3, num_of_passengers = 185, has_gas = true)
-            plane.fly()
+            // Ans of Question 2(a) 
+          lateinit var vehicle: Vehicle
+          vehicle = VehicleFactory.createVehicle(VehicleType.CAR) as Car
+          vehicle.drive()
+          vehicle = VehicleFactory.createVehicle(VehicleType.PLANE) as Plane
+          vehicle.fly()
       }
+      
+      
+### Unit Test for solution 2(a): FactoryPatternUnitTest.kt
+
+          class FactoryPatternUnitTest {
+
+          @Test
+          fun testIfVehicleFactoryAcceptsNullSuccessCase() {
+              val vehicle = VehicleFactory.createVehicle(null)
+              assertTrue(vehicle == null)
+          }
+
+          @Test
+          fun testIfCarAndVehicleIsReferringToTheSameCarSuccessCase() {
+              val vehicle = VehicleFactory.createVehicle(VehicleType.CAR) as Car
+              val car = Car(4, 4, true)
+              assertTrue(vehicle.getNumberOfWheels() == car.getNumberOfWheels())
+              assertTrue(vehicle.getNUmberOfPassengers() == car.getNUmberOfPassengers())
+              assertTrue(vehicle.hasGas() == car.hasGas())
+          }
+
+          @Test
+          fun testIfCarAndVehicleIsReferringToTheSameCarFailureCase() {
+              val vehicle = VehicleFactory.createVehicle(VehicleType.CAR) as Car
+              val car = Car(3, 18, false)
+              assertFalse(vehicle.getNumberOfWheels() == car.getNumberOfWheels())
+              assertFalse(vehicle.getNUmberOfPassengers() == car.getNUmberOfPassengers())
+              assertFalse(vehicle.hasGas() == car.hasGas())
+          }
+
+
+          @Test
+          fun testIfPlaneAndVehicleIsReferringToTheSamePlaneSuccessCase() {
+              val vehicle = VehicleFactory.createVehicle(VehicleType.PLANE) as Plane
+              val plane = Plane(5, 184, true)
+              assertTrue(vehicle.getNumberOfWheels() == plane.getNumberOfWheels())
+              assertTrue(vehicle.getNUmberOfPassengers() == plane.getNUmberOfPassengers())
+              assertTrue(vehicle.hasGas() == plane.hasGas())
+          }
+
+          @Test
+          fun testIfPlaneAndVehicleIsReferringToTheSamePlaneFailureCase() {
+              val vehicle = VehicleFactory.createVehicle(VehicleType.PLANE) as Plane
+              val plane = Plane(3, 8, false)
+              assertFalse(vehicle.getNumberOfWheels() == plane.getNumberOfWheels())
+              assertFalse(vehicle.getNUmberOfPassengers() == plane.getNUmberOfPassengers())
+              assertFalse(vehicle.hasGas() == plane.hasGas())
+          }
+
+
+          @Test
+          fun testIfCarVehicleIsNullFailCase() {
+              val vehicle = VehicleFactory.createVehicle(VehicleType.CAR)
+              assertFalse(vehicle == null)
+          }
+
+
+          @Test
+          fun testIfPlaneVehicleIsNullFailCase() {
+              val vehicle = VehicleFactory.createVehicle(VehicleType.PLANE)
+              assertFalse(vehicle == null)
+          }
+
+      }
+      
+ Unit test code for the solution of Q#2(a) using **Factory Design Pattern**.
+ 
 <br/>
 
 
@@ -184,7 +252,7 @@ Now, we will build the **PlaneBuilder** class in a same way.
 After creating these two classes. We will simply call 'build()' method with the builder classes to build Car and Plane respectively. Here is the **Controller.kt** class.
 
         fun main() {
-            // Ans of Question (b)
+            // Ans of Question 2(b)
             // TODO:: Build car using builder pattern
             val buildCar: CarBuilder = CarBuilder.Builder().withTotalWheels(4).withPassengerMaxCapacity(5)
                 .withGasEngine(false).build()
@@ -197,8 +265,57 @@ After creating these two classes. We will simply call 'build()' method with the 
         }
 
 
+### Unit test for solution 2(b): BuilderDesignPatternTest.kt
+
+      class BuilderDesignPatternTest {
+          @Test
+          fun testCarBuilderOnSuccessCase() {
+              val car: CarBuilder =
+                  CarBuilder.Builder().withTotalWheels(4).withPassengerMaxCapacity(5)
+                      .withGasEngine(false).build()
+              assertEquals(4, car.numOfWheels)
+              assertEquals(5, car.numOfPassengers)
+              assertEquals(false, car.hasGas())
+          }
+
+          @Test
+          fun testPlaneBuilderOnSuccessCase() {
+              val plane: PlaneBuilder = PlaneBuilder.Builder().withTotalWheels(5)
+                  .withPassengerCapacity(185).withGasEngine(true).build()
+
+              assertEquals(5, plane.numOfWheels)
+              assertEquals(185, plane.numOfPassengers)
+              assertEquals(true, plane.hasGas())
+          }
+
+          @Test
+          fun testCarBuilderOnFailureCase() {
+              val car: CarBuilder =
+                  CarBuilder.Builder()
+                      .withTotalWheels(4)
+                      .withPassengerMaxCapacity(5)
+                      .withGasEngine(false)
+                      .build()
 
 
+              assertNotEquals(40, car.numOfWheels)
+              assertNotEquals(50, car.numOfPassengers)
+              assertNotEquals(true, car.hasGas())
+          }
 
+          @Test
+          fun testPlaneBuilderOnFailureCase() {
+              val plane: PlaneBuilder = PlaneBuilder.Builder()
+                  .withTotalWheels(5)
+                  .withPassengerCapacity(185)
+                  .withGasEngine(false)
+                  .build()
 
+              assertNotEquals(35, plane.numOfWheels)
+              assertNotEquals(1585, plane.numOfPassengers)
+              assertNotEquals(true, plane.hasGas())
+          }
+      }
+
+Here is the unit test for the alternative solution to Q#2(b) using **Builder Design Pattern**.
 
