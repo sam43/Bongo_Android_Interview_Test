@@ -17,7 +17,29 @@ Given,
           fun has_gas(): Boolean
       }
       
-The given interface indicates towards the **Factory design pattern**. Here an interface **Vehicle**, is given to build two types of objects like **Car** and **Plane**. This provides a good platform to use the factory pattern and an opportunity to change the values of the objects on the fly.
+The given interface indicates towards the **Factory design pattern**. Here an interface **Vehicle**, is given to build two types of objects like **Car** and **Plane**. This provides a good platform to use the factory pattern and an opportunity to change the values of the objects on the fly. First of all, Let's create an ENUM named **VehicleType** for our CAR and PLANE vehicle type to be built.
+
+      enum class VehicleType {
+          CAR, PLANE
+      }
+
+After that, we create a factory class named **VeicleFactory** like below:
+
+      class VehicleFactory {
+          companion object {
+              fun createVehicle(type: VehicleType?): Vehicle? =
+                  when (type) {
+                      VehicleType.CAR ->
+                          Car(num_of_wheels = 4, num_of_passengers = 4, has_gas = true)
+                      VehicleType.PLANE ->
+                          Plane(num_of_wheels = 5, num_of_passengers = 184, has_gas = true)
+                      else -> {
+                          println("Requested vehicle type is not registered yet. \nCurrently we are having only CAR and PLANES")
+                          null
+                      }
+                  }
+          }
+      }
 
 To create a car and a plane class, we will simply keep Vehicle interface as the base to provide basic properties and functionalities for both Car and Plane class. The key point of factory design pattern is that we define a class/interface and then we can have subclasses which implement the contract defined by the base class. Here the subclasses are Car and Plane class. To build a car and a plane class dynamically, we will be using the constructor params to provide the property to the sub-classes.
 
@@ -33,6 +55,11 @@ To create a car and a plane class, we will simply keep Vehicle interface as the 
         override fun set_num_of_passengers(): Int = num_of_passengers
 
         override fun has_gas(): Boolean = has_gas
+
+        // Unit test purpose
+        fun getNumberOfWheels() = num_of_wheels
+        fun getNUmberOfPassengers() = num_of_passengers
+        fun hasGas() = has_gas
 
         fun drive() {
             println("Car is driving...")
@@ -51,6 +78,11 @@ To create a car and a plane class, we will simply keep Vehicle interface as the 
         override fun set_num_of_passengers(): Int = num_of_passengers
 
         override fun has_gas(): Boolean = has_gas
+        
+        // Unit test purpose
+        fun getNumberOfWheels() = num_of_wheels
+        fun getNUmberOfPassengers() = num_of_passengers
+        fun hasGas() = has_gas
 
         fun fly() {
             println("Plane is flying...")
@@ -67,6 +99,9 @@ Both Car and Plane classes implemented the Vehicle interface to override the bas
           vehicle = VehicleFactory.createVehicle(VehicleType.PLANE) as Plane
           vehicle.fly()
       }
+      
+      output: Car is driving....
+      Plane is flying...
       
       
 ### Unit Test for solution 2(a): FactoryPatternUnitTest.kt
