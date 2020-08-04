@@ -17,9 +17,9 @@ Given,
           fun has_gas(): Boolean
       }
       
-The given interface indicates towards the Factory design pattern. Here, a interface is given to build two types of objects like Car and Plane. This provides a good platform to use the factory pattern and an opportunity to change the values of the objects on the fly.
+The given interface indicates towards the **Factory design pattern**. Here an interface **Vehicle**, is given to build two types of objects like **Car** and **Plane**. This provides a good platform to use the factory pattern and an opportunity to change the values of the objects on the fly.
 
-To create a car and a plane class, we will simply keep Vehicle class as a base class. The key point of factory design pattern is that we define a class/interface and then we can have subclasses which implement the contract defined by the base class. Here the subclasses are Car and Plane class.
+To create a car and a plane class, we will simply keep Vehicle interface as the base to provide basic properties and functionalities for both Car and Plane class. The key point of factory design pattern is that we define a class/interface and then we can have subclasses which implement the contract defined by the base class. Here the subclasses are Car and Plane class. To build a car and a plane class dynamically, we will be using the constructor params to provide the property to the sub-classes.
 
 **Car.kt**
 
@@ -57,7 +57,16 @@ To create a car and a plane class, we will simply keep Vehicle class as a base c
         }
     }
 
-Both Car and Plane classes implemented the Vehicle interface to override the base variables *set_num_of_wheels()*, *set_num_of_passengers()* and *has_gas()* to set their own attributes and properties there.
+Both Car and Plane classes implemented the Vehicle interface to override the base variables *set_num_of_wheels()*, *set_num_of_passengers()* and *has_gas()* to set their own attributes and properties there. Now we can simply build the car and plane class from our main/driver class like below:
+
+      fun main() {
+            // Ans of Question (a)
+            val car = Car(num_of_wheels = 4, num_of_passengers = 4, has_gas = true)
+            car.drive()
+            val plane = Plane(num_of_wheels = 3, num_of_passengers = 185, has_gas = true)
+            plane.fly()
+      }
+<br/>
 
 
 ## Q#2(b) Use a different design pattern for this solution.
@@ -175,12 +184,6 @@ Now, we will build the **PlaneBuilder** class in a same way.
 After creating these two classes. We will simply call 'build()' method with the builder classes to build Car and Plane respectively. Here is the **Controller.kt** class.
 
         fun main() {
-            // Ans of Question (a)
-            val car = Car(num_of_wheels = 4, num_of_passengers = 4, has_gas = true)
-            car.drive()
-            val plane = Plane(num_of_wheels = 3, num_of_passengers = 185, has_gas = true)
-            plane.fly()
-
             // Ans of Question (b)
             // TODO:: Build car using builder pattern
             val buildCar: CarBuilder = CarBuilder.Builder().withTotalWheels(4).withPassengerMaxCapacity(5)
