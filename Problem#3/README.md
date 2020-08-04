@@ -20,23 +20,23 @@ The psudo code defines the steps and algorithm behind the actual code, psudo cod
 
       PROCEDURE initializePlayer(currentPosition: Integer, progress: Integer):
         IF currentPosition > 0
-      // checking if video has already played but hasn't finished yet
-      // Can be happening with orientations changes
+      	// checking if video has already played but hasn't finished yet
+      	// Can be happening with orientations changes
             videoView.seekTo(currentPosition)
         ELSE
-      videoView.seekTo(FIRST_FRAME) // 1 is the very first frame of the video
+      		videoView.seekTo(FIRST_FRAME) // 1 is the very first frame of the video
         END IF
 
-    videoView.setOnPreparedListener {
-	... 1. here we update the seekbar
-	2. update the text for both progress text and remaining time textviews 
-    }
-    videoView.setOnCompletionListener {
-	// Call method to ensure what to do after finishing the video playback
-    }
-    play()
+	    videoView.setOnPreparedListener {
+		... 1. here we update the seekbar
+		2. update the text for both progress text and remaining time textviews 
+	    }
+	    videoView.setOnCompletionListener {
+		// Call method to ensure what to do after finishing the video playback
+	    }
+	    play()
 
-END PROCEDURE
+	END PROCEDURE
 
 
 ### play() ->
@@ -187,10 +187,119 @@ clicking upon a button in the design. Here is a sample snippet for that -
 Reason behind using this pattern is, Facade is easy to implement and can provide simple way around to solve a complex problem. Like other patterns it also increase the 
 code redability and reusability as well.
 
-Thanks
-          
-          
-          
+### Unit Test code for the project: BongoPlayerActivityTest.kt
+
+	class BongoPlayerActivityTest : Action {
+
+	    var actionState: String = ""
+
+	    @Mock
+	    lateinit var activity: BongoPlayerActivity
+
+	    @Mock
+	    lateinit var player: Player
+
+	    @Before
+	    fun setup() {
+		activity = Mockito.mock(BongoPlayerActivity::class.java)
+		player = PlayerDelegate(this)
+	    }
+
+	    @Test
+	    fun testPlayVideo() {
+		player.actionPlay()
+		assertEquals(true, actionState == PLAY)
+		assertNotEquals(true, actionState == PAUSE)
+		assertNotEquals(true, actionState == FAST_FORWARD)
+		assertNotEquals(true, actionState == REWIND)
+	    }
+
+	    @Test
+	    fun testPauseActionOnVideo() {
+		player.actionPause()
+		assertNotEquals(true, actionState == PLAY)
+		assertEquals(true, actionState == PAUSE)
+		assertNotEquals(true, actionState == FAST_FORWARD)
+		assertNotEquals(true, actionState == REWIND)
+	    }
+
+	    @Test
+	    fun testRewindActionOnVideo() {
+		player.actionRewind()
+		assertNotEquals(true, actionState == PLAY)
+		assertNotEquals(true, actionState == PAUSE)
+		assertNotEquals(true, actionState == FAST_FORWARD)
+		assertEquals(true, actionState == REWIND)
+	    }
+
+	    @Test
+	    fun testFastForwardActionOnVideo() {
+		player.actionFastForward()
+		assertNotEquals(true, actionState == PLAY)
+		assertNotEquals(true, actionState == PAUSE)
+		assertEquals(true, actionState == FAST_FORWARD)
+		assertNotEquals(true, actionState == REWIND)
+	    }
+
+	    @Test
+	    fun testSeekToSpecificPositionOfVideo() {
+		player.actionSeek()
+		assertNotEquals(true, actionState == PLAY)
+		assertNotEquals(true, actionState == PAUSE)
+		assertEquals(true, actionState == SEEK)
+		assertNotEquals(true, actionState == FAST_FORWARD)
+		assertNotEquals(true, actionState == REWIND)
+	    }
+
+
+	    @Test
+	    fun testSingleDigitSecondsWithoutRemainderSuccessfulCase() {
+		assertEquals("00:09", milliSecondsToTimer(9000))
+	    }
+
+	    @Test
+	    fun testSingleDigitSecondsWithoutRemainderUnsuccessfulCase() {
+		assertNotEquals("00:9", milliSecondsToTimer(9000))
+	    }
+
+
+	    @Test
+	    fun testSingleDigitSecondsWithRemainderSuccessfulCase() {
+		assertEquals("00:10", milliSecondsToTimer(9500))
+	    }
+
+	    @Test
+	    fun testSingleDigitSecondsWithRemainderUnsuccessfulCase() {
+		assertNotEquals("00:09", milliSecondsToTimer(9500))
+	    }
+
+	    @Test
+	    fun testSingleDigitMinutesWithoutRemainderSuccessfulCase() {
+		assertEquals("01:55", milliSecondsToTimer(115000))
+	    }
+
+	    @Test
+	    fun testSingleDigitMinutesWithoutRemainderUnsuccessfulCase() {
+		assertNotEquals("01:16", milliSecondsToTimer(115000))
+	    }
+
+	    @Test
+	    fun testSingleDigitMinutesWithRemainderSuccessfulCase() {
+		assertEquals("01:56", milliSecondsToTimer(115500))
+	    }
+
+	    @Test
+	    fun testSingleDigitMinutesWithRemainderUnsuccessfulCase() {
+		assertNotEquals("01:15", milliSecondsToTimer(115500))
+	    }
+
+	    override fun updateAction(state: String) {
+		actionState = state
+	    }
+	}
+
+        
+This class implements the **Action** class to achieve the state from the user and with that we check if the *actionPlay()*, *actionPause()*, *actionRewind()* and *actionFastforward()* are working perfectly or not. Here is also some other test cases to check if the playback time is synchronous with the seekbar progress or not. That's all from me; thank you.
           
 
 
