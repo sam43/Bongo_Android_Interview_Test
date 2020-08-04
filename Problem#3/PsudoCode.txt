@@ -1,0 +1,97 @@
+The psudo code defines the steps and algorithm behind the actual code, psudo code for the 'play', 'rewind' and 'fast forward' functionalities are written below:
+
+1. First of all we will be taking a VideoView object as 'videoView' which is defined in our layout (xml) file.
+2. We will be checking if any screen rotation occurs or not by checking the Bundle values form 'onRestoreInstanceState()' lifecycle method
+3. If the bundle is null then we will init our player from start 'initializelayer(0,0)'
+4. Here we are using the 'seekbar' as well to track down the progress time of the media or video playing
+
+
+## InitializePlayer() ->
+
+PROCEDURE initializePlayer(currentPosition: Integer, progress: Integer):
+    IF currentPosition > 0
+	// checking if video has already played but hasn't finished yet
+	// Can be happening with orientations changes
+        videoView.seekTo(currentPosition)
+    ELSE
+	videoView.seekTo(FIRST_FRAME) // 1 is the very first frame of the video
+    END IF
+
+    videoView.setOnPreparedListener {
+	... 1. here we update the seekbar
+	2. update the text for both progress text and remaining time textviews 
+    }
+    videoView.setOnCompletionListener {
+	// Call method to ensure what to do after finishing the video playback
+    }
+    play()
+
+END PROCEDURE
+
+
+## play() ->
+
+PROCEDURE play():
+        tag = PAUSE_TAG // to update the state if the player is in playing state or pause state
+        player?.actionPlay() // basically starts playing the video by calling 'videoView.start()' method
+        btnPlay.changeButtonIcon(PAUSE_ICON) // chaging the icon of the single play button observing the player state (play/pause)
+END PROCEDURE 
+
+
+
+## pause() ->
+
+PROCEDURE play():
+        tag = PLAY_TAG// to update the state if the player is in playing state or pause state
+        player?.actionPause() // basically starts playing the video by calling 'videoView.start()' method
+        btnPlay.changeButtonIcon(PLAY_ICON) // chaging the icon of the single play button observing the player state (play/pause)
+END PROCEDURE 
+
+
+## rewind() ->
+
+JUMP_SIZE is the seek value while rewinding the video
+
+PROCEDURE rewind():
+        IF videoView.currentPosition > JUMP_SIZE
+             videoView.seekTo(videoView.currentPosition - JUMP_SIZE)
+	ELSE
+	     videoView.seekTo(FIRST_FRAME) // 1 is the very first frame of the video 
+END PROCEDURE 
+
+
+## fast_forward() ->
+
+JUMP_SIZE is the seek value while rewinding the video
+
+PROCEDURE rewind():
+        IF videoView.currentPosition.plus(JUMP_SIZE) >= videoView.duration 
+	   // Checking if time after jump is greateer or equal to total duration or not
+   	   videoView.seekTo(videoView.duration) // seek to end of video
+	ELSE
+	   videoView.seekTo(min of (videoView.currentPosition + JUMP_SIZE and videoView.duration)) 
+	   // getting the minimum value from the position value and the duration we will be seeking to
+END PROCEDURE 
+
+
+## seek() -> 
+
+PROCEDURE seek():
+	// We will be getting the position that have been seeked by the user from 'onProgressChanged()' method by using 'seekbar.setsetOnSeekBarChangeListener {}' callback
+	in onProgressChanged():
+		IF (videoView.isPlaying)
+			handler.postDelayed(seektime, 500) // long value for the handler
+		// for global purpose 'progressAfterSeek = progress'
+		videoView.seekTo(progress)
+END PROCEDURE 
+
+
+
+That's all for the psudo code for the video player application for problem#3
+
+
+
+
+
+
+
